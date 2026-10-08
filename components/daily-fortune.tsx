@@ -1,0 +1,5 @@
+"use client";
+import { useState } from "react";
+import { leaveBorderGlow, moveBorderGlow } from "@/components/border-glow";
+const fortunes = ["大吉", "中吉", "小吉", "吉", "末吉", "半吉", "小凶", "忌"];
+export function DailyFortune(){const [value,setValue]=useState(""),[shaking,setShaking]=useState(false);const draw=()=>{if(shaking)return;setValue("");setShaking(true);setTimeout(()=>{const day=new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Hong_Kong"});let seed=[...day].reduce((a,c)=>a+c.charCodeAt(0),0);const visitor=localStorage.getItem("suieikat-fortune-seed")||String(Math.random());localStorage.setItem("suieikat-fortune-seed",visitor);seed+=[...visitor].reduce((a,c)=>a+c.charCodeAt(0),0);setValue(fortunes[seed%fortunes.length]);setShaking(false)},950)};return <div className={`daily-fortune${shaking?" is-shaking":""}${value?" has-result":""}`}><button className="border-glow-action" onPointerMove={moveBorderGlow} onPointerLeave={leaveBorderGlow} onClick={draw} aria-label="抽取今日签">抽</button><div><small>TODAY&apos;S FORTUNE</small><strong>{value||"今日抽签"}</strong><span>{value?"今日仅供开心参考":"点击圆印，摇出今天的签"}</span></div></div>}

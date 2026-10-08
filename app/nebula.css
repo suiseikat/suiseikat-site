@@ -1,0 +1,294 @@
+/* COMET / liquid orbit. Presentation only: no data or reader format changes. */
+:root {
+  --glass-fill:rgba(255,255,255,.28);
+  --glass-line:rgba(255,255,255,.66);
+  --glass-shadow:0 24px 70px rgba(34,25,48,.12),inset 0 1px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(255,255,255,.16);
+  --glass-ink:#23202c;
+  --glass-muted:#57505f;
+  --glass-glint:rgba(255,255,255,.3);
+  --glass-blur:18px;
+  --ease-orbit:cubic-bezier(.22,1,.36,1);
+}
+html[data-theme="dark"] {
+  --glass-fill:rgba(17,18,31,.44);
+  --glass-line:rgba(255,255,255,.24);
+  --glass-shadow:0 24px 70px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.05);
+  --glass-ink:#f7f4fa;
+  --glass-muted:#d0c4d3;
+  --glass-glint:rgba(255,255,255,.1);
+}
+body.nebula-redesign {--border:var(--glass-line);--radius:1.2rem;--muted-foreground:var(--glass-muted);--foreground:var(--glass-ink);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+body.nebula-redesign :is(button,a,input,select,textarea):focus-visible{outline:2px solid var(--sakura);outline-offset:5px}
+body.nebula-redesign ::selection{background:#e78eb06b;color:inherit}
+body.nebula-redesign .page-grid{opacity:.15;mask-image:linear-gradient(#000,transparent 85%)}
+body.nebula-redesign .fixed-site-background{background-image:linear-gradient(var(--image-wash),var(--image-wash)),url('/site-background-v2.webp')}
+body.nebula-redesign .site-shell{--image-wash:rgba(245,241,249,.2)}
+html[data-theme="dark"] body.nebula-redesign .site-shell{--image-wash:rgba(10,8,20,.36)}
+
+/* Floating navigation. Logos deliberately remain the original assets/fonts. */
+body.nebula-redesign :is(.topbar,.site-nav){top:18px;left:50%;width:min(1320px,calc(100% - 56px));height:66px;min-height:0;margin:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;padding:0 26px;border:1px solid var(--glass-line);border-radius:24px;background:var(--glass-fill);color:var(--glass-ink);box-shadow:var(--glass-shadow);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);transform:translate(-50%,0);transition:transform .45s var(--ease-orbit),opacity .3s}
+body.nebula-redesign :is(.topbar,.site-nav).is-hidden{transform:translate(-50%,calc(-100% - 30px));opacity:0;pointer-events:none}
+body.nebula-redesign .brand-mark,body.nebula-redesign .site-nav-logo{font-size:1.95rem;color:inherit;justify-self:start}
+body.nebula-redesign .nav-index{display:none}
+body.nebula-redesign :is(.nav-links,.site-nav-center){grid-column:2;display:flex;align-items:center;gap:30px}
+body.nebula-redesign :is(.nav-links a,.site-nav-center a,.site-nav-actions a){font-family:'Avantt','Rajdhani',sans-serif;font-size:.76rem;color:inherit;opacity:.8;transition:opacity .2s,color .2s}
+body.nebula-redesign :is(.nav-links a,.site-nav-center a,.site-nav-actions a):hover{opacity:1;color:var(--sakura)}
+body.nebula-redesign :is(.status-pill,.site-nav-actions){grid-column:3;justify-self:end}
+body.nebula-redesign .status-pill{font-size:.58rem;letter-spacing:.14em;border:0;padding:0;background:none;white-space:nowrap}
+body.nebula-redesign :is(.site-nav-cta,.site-nav-add){border-radius:99px!important;padding:9px 15px!important}
+
+/* Opening scene: an oversized typographic stage, with an orbital counterweight. */
+body.nebula-redesign .hero{position:relative;display:grid;width:min(1440px,calc(100% - 80px));min-height:100svh;margin:0 auto;padding:125px 0 40px;grid-template-columns:1.08fr 1fr;grid-template-rows:1fr auto;gap:0;border:0;background:transparent;overflow:visible}
+body.nebula-redesign .hero-art{grid-column:2;grid-row:1;min-height:0;align-self:stretch;isolation:isolate}
+body.nebula-redesign .orbit-logo{width:112%;max-width:760px;object-fit:contain;transform:rotate(-12deg);opacity:.95;mix-blend-mode:difference;filter:contrast(1.15)}
+body.nebula-redesign .hero-shape{opacity:.55}
+body.nebula-redesign .hero-art-note{left:auto;right:4%;bottom:12%;font-size:.65rem;letter-spacing:.22em}
+body.nebula-redesign .hero-copy{position:relative;grid-column:1;grid-row:1;top:auto;right:auto;width:auto;align-self:center;align-items:flex-start;justify-content:center;padding:20px 0 60px;mix-blend-mode:normal;text-align:left;color:var(--glass-ink)}
+body.nebula-redesign .eyebrow{display:flex;width:100%;max-width:440px;justify-content:space-between;gap:20px;border:0;padding:0;color:var(--glass-muted);font-size:.66rem;letter-spacing:.2em}
+body.nebula-redesign .hero h1{position:relative;z-index:4;font-family:'Avantt','Rajdhani',sans-serif;font-size:clamp(5rem,9.8vw,10.5rem);font-weight:600;line-height:.86;letter-spacing:-.085em;margin:36px 0 28px;white-space:nowrap;text-align:left;text-shadow:0 6px 30px rgba(0,0,0,.08)}
+body.nebula-redesign .hero h1 :is(span,em){font:inherit;color:inherit;transform:none;-webkit-text-stroke:0;margin:0}
+body.nebula-redesign .hero h1 em{color:transparent;-webkit-text-stroke:1px var(--glass-ink)}
+body.nebula-redesign .hero-copy>p{max-width:380px;width:auto;margin:0 0 30px;font-size:.94rem;line-height:1.95;color:var(--glass-muted);text-align:left;text-wrap:pretty}
+body.nebula-redesign .explore-link{display:flex;align-items:center;justify-content:space-between;align-self:flex-start;width:175px;padding:17px 22px;margin:0;border:1px solid var(--glass-line);border-radius:999px;background:var(--glass-fill);color:var(--glass-ink);box-shadow:var(--glass-shadow);backdrop-filter:blur(16px);font-size:.7rem;letter-spacing:.18em;transition:width .4s var(--ease-orbit),background .3s}
+body.nebula-redesign .explore-link:hover{width:195px;background:color-mix(in srgb,var(--sakura) 18%,var(--glass-fill))}
+.hero-coordinate{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:36px;font:600 .56rem/1.5 'Rajdhani',sans-serif;letter-spacing:.17em;color:var(--glass-muted)}
+.hero-coordinate i{width:5px;height:5px;border-radius:50%;background:var(--sakura);box-shadow:0 0 10px var(--sakura)}
+.hero-coordinate span{flex-basis:100%;margin-left:13px;letter-spacing:.12em;font-size:.66rem}
+body.nebula-redesign .hero-footnote{grid-column:1/-1;position:relative;left:auto;right:auto;bottom:auto;width:100%;padding:22px 0 0;border-top:1px solid var(--glass-line);font-size:.58rem;letter-spacing:.18em;color:var(--glass-muted)}
+body.nebula-redesign .marquee-divider{transform:none;border:0;padding:42px 0;margin:0 0 60px;opacity:.6}
+body.nebula-redesign .marquee-track span{font-family:'Avantt','Rajdhani',sans-serif;font-size:clamp(2rem,4.3vw,5rem);line-height:1.1;letter-spacing:-.04em}
+
+/* The optical vocabulary: edge caustics, refraction, soft specular highlights. */
+body.nebula-redesign :is(.feature-card,.directory-card,.message-item,.profile-grid>article,.admin-music){position:relative;isolation:isolate;background:radial-gradient(280px circle at var(--shine-x,0) var(--shine-y,0),var(--glass-glint),transparent 80%),linear-gradient(145deg,rgba(255,255,255,.13),transparent 58%),var(--glass-fill);border:1px solid var(--glass-line);box-shadow:var(--glass-shadow);backdrop-filter:blur(var(--glass-blur)) saturate(1.45);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.45)}
+.glass-lens{position:absolute;z-index:-1;inset:0;width:100%;height:100%;border-radius:inherit;pointer-events:none;opacity:.34;mix-blend-mode:luminosity}
+body.nebula-redesign :is(.feature-card,.directory-card,.message-item,.profile-grid>article)::after{content:'';position:absolute;inset:5px;border-radius:inherit;border:1px solid rgba(255,255,255,.1);pointer-events:none}
+body.nebula-redesign .spaces-section{width:min(1320px,calc(100% - 80px));margin:0 auto;padding:0;border:0;border-radius:40px;background:transparent;backdrop-filter:none;overflow:visible}
+body.nebula-redesign .spaces-backgrounds{inset:-50px -40px;border-radius:50px;overflow:hidden;mask-image:linear-gradient(transparent,#000 20% 80%,transparent)}
+body.nebula-redesign .section-heading{min-height:160px;display:flex;align-items:center;justify-content:space-between;padding:20px 0 40px;border:0;gap:30px}
+body.nebula-redesign .section-heading h2{font-size:clamp(2.8rem,5vw,5rem);font-weight:500;letter-spacing:-.06em;margin-top:14px}
+body.nebula-redesign .feature-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;border:0;background:transparent}
+body.nebula-redesign .feature-card:nth-child(n){grid-column:auto;min-height:360px;display:flex;flex-direction:column;padding:27px;border:1px solid var(--glass-line);border-radius:30px;color:inherit;overflow:hidden;transition:translate .5s var(--ease-orbit),box-shadow .4s,border-color .4s}
+body.nebula-redesign .feature-card:hover{translate:0 -10px;border-color:rgba(255,255,255,.75);box-shadow:0 35px 70px rgba(0,0,0,.2),inset 0 1px #ffffffa3}
+body.nebula-redesign .feature-card:nth-child(1){grid-column:span 7}
+body.nebula-redesign .feature-card:nth-child(2){grid-column:span 5}
+body.nebula-redesign .feature-card:nth-child(3),body.nebula-redesign .feature-card:nth-child(4){grid-column:span 6}
+.feature-scene{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:blur(2px);opacity:.6;pointer-events:none}
+body.nebula-redesign .feature-card::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#090b1526,#090b15b3)}
+body.nebula-redesign .feature-card{color:#fff!important}
+body.nebula-redesign .feature-card :is(.card-index,.card-copy>p,.coming-soon,.message-preview small,.feature-title-line small){color:inherit!important}
+body.nebula-redesign .feature-card .glass-lens{z-index:-1;mix-blend-mode:normal;opacity:.6}
+body.nebula-redesign .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:65px}
+body.nebula-redesign .feature-icon{width:48px;height:48px;border-radius:16px;border:1px solid var(--glass-line);background:rgba(255,255,255,.08)}
+body.nebula-redesign .card-index{margin-left:auto;margin-right:18px;font-size:.64rem;opacity:.5}
+body.nebula-redesign .feature-title-line{display:flex;align-items:flex-start;flex-direction:column;gap:10px}
+body.nebula-redesign .feature-title-line h3{font-size:1.8rem;font-weight:500;letter-spacing:-.04em}
+body.nebula-redesign .feature-title-line small{font-size:.54rem;letter-spacing:.2em;color:inherit;opacity:.65}
+body.nebula-redesign .card-copy>p{font-size:.79rem;color:inherit;opacity:.75;line-height:1.8}
+body.nebula-redesign .coming-soon{margin-top:auto;padding-top:26px;font-size:.54rem;color:inherit;opacity:.6;letter-spacing:.16em}
+body.nebula-redesign .music-manifesto{width:min(1320px,calc(100% - 80px));margin:100px auto 0;border:1px solid var(--glass-line);border-radius:36px;overflow:hidden;background:transparent;box-shadow:var(--glass-shadow);backdrop-filter:blur(22px)}
+body.nebula-redesign .music-information{background:rgba(8,9,20,.86);padding:50px;color:#f7f4fa}
+body.nebula-redesign .music-cover-stage{background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,255,255,.28));min-height:450px}
+body.nebula-redesign .floating-cover img{border-radius:18px}
+body.nebula-redesign footer.compact-footer{width:min(1320px,calc(100% - 80px));margin-top:60px;padding:24px 0;color:var(--glass-muted)}
+
+/* Guestbook becomes an editorial feed with a floating composer. */
+body.nebula-redesign .guestbook-shell{padding:0 max(28px,calc((100vw - 1320px)/2)) 80px}
+body.nebula-redesign .guestbook-header{min-height:0;padding:140px 0 48px;border:0}
+body.nebula-redesign .guestbook-title{max-width:850px;padding-top:35px}
+body.nebula-redesign .guestbook-title h1{font-size:clamp(3.4rem,7.4vw,7rem);letter-spacing:-.07em;line-height:1.05;font-weight:500}
+body.nebula-redesign .guestbook-title>p{max-width:550px;line-height:1.9}
+body.nebula-redesign .guestbook-layout{display:grid;grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr);gap:28px;border:0;background:transparent}
+body.nebula-redesign :is(.message-form,.message-login-gate){position:sticky;top:110px;align-self:start;min-height:0;padding:32px;border:1px solid var(--glass-line);border-radius:30px;background:var(--glass-fill);box-shadow:var(--glass-shadow);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+body.nebula-redesign .message-list-section{padding:0;border:0}
+body.nebula-redesign .message-list-heading{padding:10px 8px 30px;border:0}
+body.nebula-redesign .message-list{display:grid;gap:18px}
+body.nebula-redesign .message-item{padding:30px;border-radius:26px;margin:0;overflow:visible}
+body.nebula-redesign .message-item.is-pinned{border-color:color-mix(in srgb,var(--sakura) 65%,var(--glass-line))}
+body.nebula-redesign .message-image{border-radius:18px}
+body.nebula-redesign .message-form textarea{border-radius:18px;background:rgba(255,255,255,.06);padding:18px}
+body.nebula-redesign .form-footer button{border-radius:999px;padding:13px 20px}
+body.nebula-redesign .reaction-list{backdrop-filter:blur(20px);border-radius:18px}
+
+/* Lab: persistent index + a generous, quiet workbench. */
+body.nebula-redesign .lab-shell{padding:0 max(28px,calc((100vw - 1400px)/2)) 80px}
+body.nebula-redesign .lab-header{padding-top:125px;border:0}
+body.nebula-redesign .lab-heading{display:flex;align-items:flex-end;justify-content:space-between;min-height:240px;margin:0;padding:30px 0 45px;border:0}
+body.nebula-redesign .lab-heading h1{font-size:clamp(3.5rem,8vw,8rem);line-height:.88;letter-spacing:-.07em;font-weight:500}
+body.nebula-redesign .lab-heading h1 br{display:none}
+body.nebula-redesign .lab-heading-mark{border:0;background:transparent;opacity:.65}
+body.nebula-redesign .lab-layout{display:grid;grid-template-columns:205px minmax(0,1fr);gap:24px;border:0;background:transparent;align-items:start}
+body.nebula-redesign .lab-primary-menu{position:sticky;top:110px;display:flex;flex-direction:column;gap:8px;padding:18px;border:1px solid var(--glass-line);border-radius:26px;background:var(--glass-fill);box-shadow:var(--glass-shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+body.nebula-redesign .lab-primary-menu>span{padding:8px 12px 18px;font-size:.54rem;letter-spacing:.18em;opacity:.6}
+body.nebula-redesign .lab-primary-menu button{display:flex;align-items:center;gap:13px;min-height:50px;padding:12px;border:0;border-radius:16px;background:transparent;color:inherit;text-align:left;font-size:.8rem;transition:background .3s,translate .3s}
+body.nebula-redesign .lab-primary-menu button b{font-size:.6rem;opacity:.5}
+body.nebula-redesign .lab-primary-menu button.is-active{background:color-mix(in srgb,var(--foreground) 90%,transparent);color:var(--background);box-shadow:0 8px 20px #00000014}
+body.nebula-redesign .lab-primary-menu button:hover:not(.is-active){background:rgba(255,255,255,.15);translate:3px 0}
+body.nebula-redesign .lab-primary-menu>p{font-size:.62rem;line-height:1.7;padding:14px 12px 0;opacity:.5}
+body.nebula-redesign .lab-content{min-width:0;border:1px solid var(--glass-line);border-radius:32px;background:var(--glass-fill);box-shadow:var(--glass-shadow);backdrop-filter:blur(22px) saturate(1.35);-webkit-backdrop-filter:blur(22px) saturate(1.35)}
+body.nebula-redesign .lab-section{padding:34px;border:0;overflow:clip}
+body.nebula-redesign .lab-section-title{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start}
+body.nebula-redesign .lab-section-title h2{font-size:clamp(1.9rem,3.4vw,3.5rem);font-weight:500;line-height:1.15;letter-spacing:-.055em;white-space:normal;text-wrap:balance}
+body.nebula-redesign .lab-section-title>p{grid-column:2;max-width:550px;text-align:left;margin:0;font-size:.8rem;line-height:1.8}
+body.nebula-redesign :is(.lab-search,.admin-search){border:1px solid var(--glass-line);border-radius:18px;background:rgba(255,255,255,.1);overflow:hidden}
+body.nebula-redesign .directory-filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 25px}
+body.nebula-redesign .directory-filters button{border:1px solid var(--glass-line);border-radius:99px;padding:9px 14px;background:transparent;font-size:.7rem}
+body.nebula-redesign .directory-filters button.is-active{background:var(--foreground);color:var(--background)}
+body.nebula-redesign .directory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.nebula-redesign .directory-card{grid-template-columns:48px minmax(0,1fr) auto;min-width:0;padding:20px;gap:14px;border-radius:22px;transition:translate .35s var(--ease-orbit),border-color .3s}
+body.nebula-redesign .directory-card:hover{translate:0 -4px;border-color:var(--sakura);color:inherit}
+body.nebula-redesign .directory-card h3{font-size:1rem;overflow-wrap:anywhere}
+body.nebula-redesign .directory-card small{font-size:.6rem}
+body.nebula-redesign .directory-card p{font-size:.46rem;letter-spacing:.12em}
+body.nebula-redesign :is(.square-site-icon,.square-course-icon){width:48px;height:48px;border-radius:14px;border:1px solid var(--glass-line);background:rgba(255,255,255,.08);color:inherit}
+body.nebula-redesign .course-list{display:grid;gap:14px}
+body.nebula-redesign .course-card{border:1px solid var(--glass-line);border-radius:24px;background:rgba(255,255,255,.06);padding:24px}
+body.nebula-redesign :is(.pdf-toolbar,.pdf-empty,.pdf-image-card,.pdf-download-row,.toolbox-preview,.toolbox-controls){border-radius:20px;background:rgba(255,255,255,.06)}
+body.nebula-redesign :is(.fun-tabs,.toolbox-tabs){border-radius:18px;overflow:hidden}
+body.nebula-redesign :is(.test-metric,.test-analysis,.test-action-panel,.runner-aside,.game-2048){border-color:var(--glass-line)}
+body.nebula-redesign :is(.test-dashboard,.test-side,.analysis-grid){min-width:0}
+body.nebula-redesign .test-dashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+
+/* Personal spaces keep their uploaded image and its clear-to-blurred extension. */
+body.nebula-redesign .community-page{padding-top:130px}
+body.nebula-redesign .profile-page{padding-top:125px;background-color:transparent}
+body.nebula-redesign .profile-page>:is(.profile-background-clear,.profile-background-blur,.profile-background-shade){position:absolute;left:0;right:0;pointer-events:none}
+body.nebula-redesign .profile-background-clear{mask-image:linear-gradient(to bottom,#000 0%,#000 62%,transparent 100%)}
+body.nebula-redesign .profile-background-blur{top:calc(var(--profile-cover-height) - 260px);bottom:0;filter:none;transform:none;opacity:1;mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.4) 130px,#000 260px)}
+body.nebula-redesign .profile-background-blur img{top:-120px;left:-6%;width:112%;height:calc(100% + 240px);min-height:100svh;filter:blur(38px) saturate(.85);object-fit:cover;transform:none}
+body.nebula-redesign .profile-background-blur:after{inset:0;background:linear-gradient(transparent 40%,rgba(8,8,16,.3))}
+body.nebula-redesign .profile-background-shade{top:0;bottom:0;z-index:1;background:linear-gradient(rgba(8,8,18,.1),rgba(8,8,18,.1) 35%,rgba(8,8,18,.38))}
+body.nebula-redesign .profile-hero{gap:42px;min-height:400px;margin-top:0;border:0}
+body.nebula-redesign .profile-hero h1{font-size:clamp(3.2rem,8vw,7rem);font-weight:500;line-height:1;overflow-wrap:anywhere;letter-spacing:-.065em}
+body.nebula-redesign .profile-orbit{box-shadow:0 20px 65px #00000030,inset 0 0 0 6px #ffffff1a;border:1px solid #ffffff85}
+body.nebula-redesign .profile-bio{font-size:1rem;line-height:1.8}
+body.nebula-redesign .profile-grid{gap:18px;border:0;background:none;backdrop-filter:none}
+body.nebula-redesign .profile-grid>article{border:1px solid var(--glass-line);border-radius:26px;min-height:210px;padding:28px}
+body.nebula-redesign .achievement-grid{gap:14px;margin-top:24px}
+body.nebula-redesign .achievement-grid article{border:1px solid var(--glass-line);border-radius:24px;background:var(--glass-fill);backdrop-filter:blur(16px);padding:26px}
+body.nebula-redesign .achievement-section header{border:0}
+body.nebula-redesign .community-heading{margin:28px 0 50px;padding-top:0;border:0}
+body.nebula-redesign .community-heading h1{font-weight:500;line-height:1}
+body.nebula-redesign :is(.ranking-list,.admin-user-list){display:grid;gap:12px;border:0}
+body.nebula-redesign :is(.ranking-row,.admin-user,.admin-novel,.admin-section-link){border:1px solid var(--glass-line);border-radius:20px;background:var(--glass-fill);backdrop-filter:blur(16px);box-shadow:inset 0 1px #ffffff30}
+body.nebula-redesign .rank-avatar{border-radius:50%}
+body.nebula-redesign :is(.admin-music,.admin-novels){border-radius:28px;padding:30px;margin-bottom:25px}
+body.nebula-redesign .admin-section-link{margin-top:25px}
+body.nebula-redesign .admin-music input{border-radius:14px}
+body.nebula-redesign :is(.admin-user select,.admin-user>button,.admin-novel button){border-radius:12px}
+
+/* A translucent control drawer; retain the same authentication and profile forms. */
+body.nebula-redesign .settings-button{z-index:50;width:54px!important;height:54px!important;border:1px solid var(--glass-line)!important;border-radius:50%!important;background:var(--glass-fill)!important;color:var(--foreground)!important;box-shadow:var(--glass-shadow)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+body.nebula-redesign .settings-sheet{background:color-mix(in srgb,var(--panel) 72%,transparent)!important;backdrop-filter:blur(32px) saturate(1.45);-webkit-backdrop-filter:blur(32px) saturate(1.45);border-left:1px solid var(--glass-line)!important;box-shadow:-20px 0 80px #00000026;overflow-y:auto}
+body.nebula-redesign :is(.settings-symbol,.setting-row,.account-panel){border-radius:20px}
+body.nebula-redesign .settings-symbol{background:var(--glass-fill);color:var(--foreground);border-color:var(--glass-line)}
+body.nebula-redesign :is(.theme-select,.account-form input){border-radius:12px!important;background:rgba(255,255,255,.06)!important}
+body.nebula-redesign :is(.account-submit,.checkin-button,.account-links a){border-radius:14px}
+body.nebula-redesign .account-tabs{border-radius:14px;overflow:hidden}
+body.nebula-redesign .profile-editor-dialog{border-radius:28px;background:color-mix(in srgb,var(--panel) 85%,transparent);backdrop-filter:blur(26px)}
+body.nebula-redesign .back-link,body.nebula-redesign .lab-back{color:inherit;opacity:.65;border:0;background:transparent}
+
+/* Works: preserve the novel wall and parallel shelf; only re-skin the catalog. */
+body.nebula-redesign .novel-library .novel-catalog{background:transparent!important;color:var(--glass-ink)!important}
+body.nebula-redesign .novel-library .catalog-background{background-image:linear-gradient(var(--image-wash),var(--image-wash)),url('/site-background-v2.webp')!important;filter:none!important;opacity:1!important;background-size:cover!important;background-position:center!important}
+body.nebula-redesign .novel-library .catalog-window{border:1px solid var(--glass-line)!important;border-radius:36px!important;background:radial-gradient(450px circle at var(--shine-x,0) var(--shine-y,0),var(--glass-glint),transparent 80%),var(--glass-fill)!important;backdrop-filter:blur(22px) saturate(1.65)!important;-webkit-backdrop-filter:blur(22px) saturate(1.65)!important;box-shadow:var(--glass-shadow)!important;color:var(--glass-ink)!important}
+body.nebula-redesign .novel-library :is(.catalog-sidebar,.catalog-main){background:transparent!important;color:inherit!important;backdrop-filter:none!important}
+body.nebula-redesign .novel-library .catalog-sidebar>section{border:1px solid var(--glass-line)!important;border-radius:22px!important;background:rgba(255,255,255,.06)!important}
+body.nebula-redesign .novel-library :is(.catalog-brand,.catalog-brand span,.catalog-monogram,.catalog-sidebar b,.recent-reading button,.recent-reading small,.catalog-all-heading,.catalog-book h3,.catalog-book p,.catalog-toolbar input,.catalog-sort select,.catalog-toolbar nav button){color:var(--glass-ink)!important}
+body.nebula-redesign .novel-library .catalog-book{border:1px solid var(--glass-line)!important;border-radius:20px!important;background:rgba(255,255,255,.08)!important;box-shadow:inset 0 1px #ffffff50,0 15px 35px #00000012!important;transition:translate .4s var(--ease-orbit),box-shadow .4s!important}
+body.nebula-redesign .novel-library .catalog-book:hover{translate:0 -7px;box-shadow:0 25px 45px #00000028!important}
+body.nebula-redesign .novel-library :is(.catalog-sort select,.catalog-toolbar>label){background:rgba(255,255,255,.08)!important;border-color:var(--glass-line)!important}
+body.nebula-redesign .novel-library .book-dialog{background:color-mix(in srgb,var(--panel) 86%,transparent);color:var(--foreground);border-color:var(--glass-line);backdrop-filter:blur(30px);border-radius:30px}
+body.nebula-redesign .book-dialog :is(.book-dialog-kana,.book-dialog-desc p){color:var(--glass-muted)!important}
+body.nebula-redesign .book-dialog-actions{background:transparent}
+body.nebula-redesign .book-dialog-actions .download-book{color:var(--foreground);border-color:var(--glass-line)}
+
+@media(max-width:1100px){
+  body.nebula-redesign .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.nebula-redesign .feature-card:nth-child(n){min-height:310px}
+  body.nebula-redesign .test-dashboard{grid-template-columns:1fr}
+  body.nebula-redesign .site-nav-center{gap:18px}
+  body.nebula-redesign .site-nav-actions{gap:12px}
+}
+@media(max-width:820px){
+  body.nebula-redesign :is(.topbar,.site-nav){top:12px;width:calc(100% - 24px);height:58px;grid-template-columns:1fr auto;padding:0 18px;border-radius:20px;gap:12px}
+  body.nebula-redesign .topbar .nav-links{display:flex!important;position:static;height:auto;grid-column:2;gap:20px}
+  body.nebula-redesign .mobile-primary-nav{display:none!important}
+  body.nebula-redesign .site-nav-center{display:none}
+  body.nebula-redesign .site-nav-actions{grid-column:2}
+  body.nebula-redesign .site-nav-actions>a:not(.site-nav-cta){font-size:.65rem}
+  body.nebula-redesign .brand-mark,body.nebula-redesign .site-nav-logo{font-size:1.6rem}
+  body.nebula-redesign .hero{width:calc(100% - 40px);min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:125px 0 35px;overflow:visible}
+  body.nebula-redesign .hero-art{position:absolute;inset:140px -20px 100px;opacity:.8;pointer-events:none}
+  body.nebula-redesign .orbit-logo{position:absolute;top:50%;left:0;width:110%;max-width:none;transform:translateY(-50%) rotate(-12deg)}
+  body.nebula-redesign .hero-copy{position:relative;width:100%;padding:40px 0 55px;mix-blend-mode:difference;color:#fff;z-index:4;align-items:flex-start}
+  body.nebula-redesign .hero-copy .eyebrow{display:flex;color:inherit;font-size:.56rem}
+  body.nebula-redesign .hero h1{font-size:clamp(3.8rem,14.7vw,7rem);line-height:.9}
+  body.nebula-redesign .hero h1 em{-webkit-text-stroke-color:#fff}
+  body.nebula-redesign .hero-copy>p{color:inherit;font-size:.84rem;max-width:85%;margin-bottom:25px}
+  body.nebula-redesign .hero-coordinate{color:inherit}
+  body.nebula-redesign .explore-link{color:#fff;background:#ffffff18;border-color:#ffffff60}
+  body.nebula-redesign .hero-footnote{margin-top:auto;font-size:.5rem}
+  body.nebula-redesign .hero-art-note{display:none}
+  body.nebula-redesign :is(.spaces-section,.music-manifesto,footer.compact-footer){width:calc(100% - 32px)}
+  body.nebula-redesign .section-heading{flex-direction:row;align-items:center;gap:12px;padding-bottom:25px}
+  body.nebula-redesign .section-heading h2{font-size:2.8rem}
+  body.nebula-redesign .feature-grid{gap:12px}
+  body.nebula-redesign .feature-card:nth-child(n){min-height:290px;padding:22px;border-radius:24px}
+  body.nebula-redesign .card-top{margin-bottom:36px}
+  body.nebula-redesign .card-index{display:none}
+  body.nebula-redesign .feature-title-line h3{font-size:1.5rem}
+  body.nebula-redesign .music-manifesto{margin-top:65px;border-radius:28px;grid-template-columns:1fr}
+  body.nebula-redesign .music-information{padding:30px;min-height:350px}
+  body.nebula-redesign .music-cover-stage{min-height:330px}
+  body.nebula-redesign .guestbook-shell,body.nebula-redesign .lab-shell{padding-inline:16px}
+  body.nebula-redesign .guestbook-header{padding-top:105px}
+  body.nebula-redesign .guestbook-layout{grid-template-columns:1fr;gap:30px}
+  body.nebula-redesign :is(.message-form,.message-login-gate){position:relative;top:0;padding:24px}
+  body.nebula-redesign .message-item{padding:24px}
+  body.nebula-redesign .lab-heading{min-height:190px;padding:25px 0}
+  body.nebula-redesign .lab-heading h1{font-size:clamp(2.8rem,10.5vw,5.5rem)}
+  body.nebula-redesign .lab-heading-mark{display:none}
+  body.nebula-redesign .lab-layout{grid-template-columns:1fr;gap:15px}
+  body.nebula-redesign .lab-primary-menu{position:relative;top:0;flex-direction:row;overflow-x:auto;gap:6px;padding:8px;border-radius:22px}
+  body.nebula-redesign .lab-primary-menu>span,body.nebula-redesign .lab-primary-menu>p{display:none}
+  body.nebula-redesign .lab-primary-menu button{width:auto;flex:0 0 auto;min-width:0;min-height:44px;white-space:nowrap;font-size:.7rem;padding:10px 14px!important;gap:7px}
+  body.nebula-redesign .lab-section{padding:24px 18px}
+  body.nebula-redesign .lab-section-title h2{font-size:clamp(1.6rem,6vw,2.5rem)}
+  body.nebula-redesign .directory-grid{grid-template-columns:1fr}
+  body.nebula-redesign .community-page{padding:110px 16px 70px}
+  body.nebula-redesign .profile-hero{min-height:340px;gap:20px;align-items:center}
+  body.nebula-redesign .profile-orbit{width:90px;flex-shrink:0}
+  body.nebula-redesign .profile-hero h1{font-size:clamp(2.3rem,9vw,4rem)}
+  body.nebula-redesign .profile-grid{gap:12px}
+  body.nebula-redesign .profile-grid>article{min-height:175px;padding:24px}
+  body.nebula-redesign .achievement-grid{grid-template-columns:1fr}
+  body.nebula-redesign .settings-sheet{width:min(430px,100vw)!important}
+  body.nebula-redesign .novel-library .catalog-window{border-radius:26px!important}
+}
+@media(max-width:430px){
+  body.nebula-redesign .section-heading{flex-direction:column;align-items:flex-start;gap:22px}
+  body.nebula-redesign .section-heading h2{white-space:nowrap}
+  body.nebula-redesign .section-heading .daily-fortune{width:100%;justify-content:flex-start}
+  body.nebula-redesign .feature-grid{grid-template-columns:1fr}
+  body.nebula-redesign .feature-card:nth-child(n){min-height:250px}
+  body.nebula-redesign .card-top{margin-bottom:28px}
+  body.nebula-redesign .hero h1{font-size:14.3vw}
+  body.nebula-redesign .hero-coordinate{font-size:.5rem}
+  body.nebula-redesign .profile-hero{flex-direction:column;align-items:flex-start;justify-content:center;padding:30px 0}
+}
+@supports not (backdrop-filter:blur(1px)){
+  body.nebula-redesign :is(.feature-card,.lab-content,.message-item,.settings-sheet,.topbar,.site-nav){background:color-mix(in srgb,var(--panel) 94%,transparent)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body.nebula-redesign :is(.feature-card,.directory-card,.catalog-book,.explore-link,.topbar,.site-nav){transition:none!important}
+  body.nebula-redesign .glass-lens{display:none}
+}
+
+/* Independent material preference: never alters theme, content, or images. */
+html[data-glass="frosted"]{--glass-blur:32px;--glass-glint:rgba(255,255,255,.08);--glass-fill:rgba(245,243,249,.5);--glass-shadow:0 16px 45px #21172b18,inset 0 1px #ffffff80}
+html[data-glass="frosted"][data-theme="dark"]{--glass-fill:rgba(24,24,34,.65);--glass-shadow:0 16px 45px #00000028,inset 0 1px #ffffff20}
+html[data-glass="frosted"] .glass-lens{display:none}
+html[data-glass="frosted"] .feature-scene{filter:blur(12px);transform:scale(1.08);opacity:.45}
+html[data-glass="frosted"] body.nebula-redesign :is(.topbar,.site-nav,.lab-content,.lab-primary-menu,.catalog-window,.settings-sheet){backdrop-filter:blur(32px) saturate(1.1)!important;-webkit-backdrop-filter:blur(32px) saturate(1.1)!important}
+@media(max-width:1100px){body.nebula-redesign .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.nebula-redesign .feature-card:nth-child(n){grid-column:auto}}
+@media(max-width:600px){body.nebula-redesign .feature-grid{grid-template-columns:1fr}}

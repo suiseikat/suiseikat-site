@@ -1,120 +1,93 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ArrowUpRight, BookOpen, Box, Clock3, Code2, Image as ImageIcon, Moon, Palette, Settings2, Sparkles, Sun, UserRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight, Box, Clock3, Code2, MessageCircleHeart, UserRound } from "lucide-react";
+import { MessagePreview } from "@/components/message-preview";
+import { DailyMusic } from "@/components/daily-music";
+import { SiteMotion } from "@/components/site-motion";
+import { DailyFortune } from "@/components/daily-fortune";
+import { GlassLens } from "@/components/liquid-glass";
 import { siteConfig } from "@/lib/site-config";
 
-type ThemeMode = "system" | "light" | "dark";
 type Uptime = { days: number; hours: number; minutes: number; seconds: number };
-const featureIcons = [BookOpen, Box, Code2, UserRound];
+const featureIcons = [MessageCircleHeart, Box, Code2, UserRound];
+const featureEnglish = ["GUESTBOOK", "WORKS", "LABORATORY", "PROFILE"];
 
 function splitDuration(totalSeconds: number): Uptime {
-  return {
-    days: Math.floor(totalSeconds / 86400),
-    hours: Math.floor((totalSeconds % 86400) / 3600),
-    minutes: Math.floor((totalSeconds % 3600) / 60),
-    seconds: Math.floor(totalSeconds % 60),
-  };
-}
-
-function applyTheme(mode: ThemeMode) {
-  const dark = mode === "dark" || (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
-  document.documentElement.style.colorScheme = dark ? "dark" : "light";
+  return { days: Math.floor(totalSeconds / 86400), hours: Math.floor((totalSeconds % 86400) / 3600), minutes: Math.floor((totalSeconds % 3600) / 60), seconds: Math.floor(totalSeconds % 60) };
 }
 
 export default function Home() {
-  const [theme, setTheme] = useState<ThemeMode>("system");
-  const [background, setBackground] = useState("");
-  const [draftBackground, setDraftBackground] = useState("");
   const [uptime, setUptime] = useState<Uptime>(() => splitDuration(0));
   const [launchTime, setLaunchTime] = useState(() => Date.parse(siteConfig.launchDate));
+  const [visitors, setVisitors] = useState(0);
 
   useEffect(() => {
-    const storedTheme = (localStorage.getItem("suieikat-theme") as ThemeMode | null) ?? "system";
-    const storedBackground = localStorage.getItem("suieikat-background") ?? "";
-    setTheme(storedTheme); setBackground(storedBackground); setDraftBackground(storedBackground); applyTheme(storedTheme);
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const sync = () => { if ((localStorage.getItem("suieikat-theme") ?? "system") === "system") applyTheme("system"); };
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/status").then((r) => r.json()).then((data: { launchTime?: string }) => {
+    fetch("/api/status").then(async (response) => (await response.json()) as { launchTime?: string; visitors?: number }).then((data) => {
       const timestamp = data.launchTime ? Date.parse(data.launchTime) : NaN;
       if (!Number.isNaN(timestamp)) setLaunchTime(timestamp);
+      setVisitors(data.visitors ?? 0);
     }).catch(() => undefined);
   }, []);
 
   useEffect(() => {
     const update = () => setUptime(splitDuration(Math.max(0, (Date.now() - launchTime) / 1000)));
-    update(); const timer = window.setInterval(update, 1000);
+    update();
+    const timer = window.setInterval(update, 1000);
     return () => window.clearInterval(timer);
   }, [launchTime]);
 
-  const backgroundStyle = useMemo(() => background ? { backgroundImage: `linear-gradient(var(--image-wash), var(--image-wash)), url(${JSON.stringify(background).slice(1, -1)})` } : undefined, [background]);
-  const changeTheme = (value: ThemeMode) => { setTheme(value); localStorage.setItem("suieikat-theme", value); applyTheme(value); };
-  const saveBackground = () => { const value = draftBackground.trim(); setBackground(value); value ? localStorage.setItem("suieikat-background", value) : localStorage.removeItem("suieikat-background"); };
-
   return (
-    <main className="site-shell" style={backgroundStyle}>
-      <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" /><div className="noise" aria-hidden="true" />
-      <nav className="topbar" aria-label="主导航">
-        <a className="brand-mark" href="#top" aria-label="返回首页">S</a>
-        <div className="nav-links"><a href="#spaces">入口</a><a href="#about">关于</a></div>
-        <span className="status-pill"><i /> Online</span>
-      </nav>
+    <main className="site-shell">
+      <SiteMotion />
+      <div className="fixed-site-background" aria-hidden="true" />
+      <div className="page-grid" aria-hidden="true" />
 
       <section id="top" className="hero">
-        <div className="eyebrow"><Sparkles size={14} /> A small place on the web</div>
-        <h1><span>Suieikat</span>的小站</h1>
-        <p>收集想法、作品与正在发生的事。这里会慢慢长成我喜欢的样子。</p>
-        <a className="explore-link" href="#spaces">向下看看 <span>↓</span></a>
+        <div className="hero-art" aria-hidden="true" data-hero-reveal>
+          <img className="orbit-logo" src="/orbit-logo.webp" alt="" />
+          <i className="hero-shape hero-shape-a" /><i className="hero-shape hero-shape-b" /><i className="hero-shape hero-shape-c" /><i className="hero-shape hero-shape-d" />
+          <div className="hero-crosshair" /><div className="hero-art-note">STELLAR<br />2026-9-16</div>
+        </div>
+        <div className="hero-copy" data-hero-reveal>
+          <div className="eyebrow">PERSONAL SPACE <span>HK / 22.3°N</span></div>
+          <h1 aria-label="COMET SHINING"><span className="hero-title-mask"><span>COMET</span></span><span className="hero-title-mask"><em>SHINING</em></span></h1>
+          <p>收集想法、作品与正在发生的事。<br />这里会慢慢长成我喜欢的样子。</p>
+          <a className="explore-link" href="#spaces">EXPLORE <ArrowDown size={15} /></a>
+          <div className="hero-coordinate"><i /> OPEN ORBIT / EST. 2026 <span>一直好奇，一直闪耀。</span></div>
+        </div>
+        <div className="hero-footnote" data-hero-reveal><span>A SMALL PLACE ON THE WEB</span><a href="#spaces">向下探索 <ArrowDown size={14}/></a><span>01 / INTRODUCTION</span></div>
       </section>
 
-      <section id="spaces" className="spaces-section" aria-labelledby="spaces-title">
-        <div className="section-heading"><div><span>EXPLORE</span><h2 id="spaces-title">一些空间</h2></div><p>现在只是入口，未来会通往更多地方。</p></div>
+      <section className="marquee-divider" aria-label="Designing, creating, discovering, exploring">
+        <div className="marquee-row"><div className="marquee-track"><span>DESIGNING // CREATING // DISCOVERING // EXPLORING //</span><span>DESIGNING // CREATING // DISCOVERING // EXPLORING //</span></div></div>
+      </section>
+
+      <section id="spaces" className="spaces-section space-active-none" aria-labelledby="spaces-title" data-reveal>
+        <div className="section-heading"><div><img className="section-signature" src="/suieikat-signature.webp" alt="" /><span>02 / EXPLORE</span><h2 id="spaces-title">一些空间</h2></div><DailyFortune /></div>
         <div className="feature-grid">
           {siteConfig.features.map((feature, index) => {
             const Icon = featureIcons[index] ?? Box;
-            return <a className={`feature-card accent-${index + 1}`} href={feature.href} key={feature.title}>
-              <div className="card-top"><span className="feature-icon"><Icon size={22} strokeWidth={1.7} /></span><ArrowUpRight className="arrow" size={20} /></div>
-              <div><span className="card-index">0{index + 1}</span><h3>{feature.title}</h3><p>{feature.description}</p></div>
+            const image = ["/space-messages-v2.jpg", "/space-works.webp", "/space-lab.webp", "/site-background-v2.webp"][index] ?? "/site-background-v2.webp";
+            return <Link className={`feature-card accent-${index + 1}`} href={feature.href} key={feature.title} data-reveal-card>
+              <img className="feature-scene" src={image} alt="" aria-hidden="true" />
+              <GlassLens source={image} local />
+              <div className="card-top"><span className="feature-icon"><Icon size={21} strokeWidth={1.45} /></span><span className="card-index">0{index + 1}</span><ArrowUpRight className="arrow" size={20} /></div>
+              <div className="card-copy"><div className="feature-title-line"><h3>{feature.title}</h3><small>{featureEnglish[index]}</small></div>{index === 0 ? <MessagePreview /> : <p>{feature.description}</p>}</div>
               <span className="coming-soon">{feature.status}</span>
-            </a>;
+            </Link>;
           })}
         </div>
       </section>
 
-      <section id="about" className="manifesto"><div className="manifesto-orbit" aria-hidden="true"><span>S</span></div><p>保持好奇，持续创造。</p></section>
+      <DailyMusic />
 
-      <footer>
-        <div className="uptime-block"><div className="uptime-label"><Clock3 size={15} /> 网站已安静运行</div><div className="uptime-values" aria-live="polite">
-          <strong>{uptime.days}<small>天</small></strong><strong>{String(uptime.hours).padStart(2, "0")}<small>时</small></strong><strong>{String(uptime.minutes).padStart(2, "0")}<small>分</small></strong><strong>{String(uptime.seconds).padStart(2, "0")}<small>秒</small></strong>
-        </div></div>
-        <p className="copyright">© {new Date().getFullYear()} Suieikat · Made with curiosity.</p>
+      <footer className="compact-footer">
+        <div className="compact-status"><div><img className="section-signature" src="/suieikat-signature.webp" alt="" /><span>04 / STATUS</span></div><p><Clock3 size={11} /> {uptime.days}D {String(uptime.hours).padStart(2, "0")}H {String(uptime.minutes).padStart(2, "0")}M {String(uptime.seconds).padStart(2, "0")}S · {visitors.toLocaleString()} VISITORS</p></div>
+        <p className="copyright">© {new Date().getFullYear()} SUIEIKAT<br />MADE WITH CURIOSITY.</p>
       </footer>
 
-      <Sheet>
-        <SheetTrigger asChild><Button className="settings-button" size="icon" variant="outline" aria-label="打开外观设置"><Settings2 size={19} /></Button></SheetTrigger>
-        <SheetContent className="settings-sheet">
-          <SheetHeader className="settings-header"><div className="settings-symbol"><Palette size={20} /></div><SheetTitle className="settings-title">外观设置</SheetTitle><SheetDescription>这些选择只保存在当前浏览器中。</SheetDescription></SheetHeader>
-          <div className="settings-body">
-            <div className="setting-row"><div><label htmlFor="theme-select">显示模式</label><p>选择浅色、深色或跟随设备。</p></div>
-              <Select value={theme} onValueChange={(value) => changeTheme(value as ThemeMode)}><SelectTrigger id="theme-select" className="theme-select" aria-label="显示模式"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="system"><Palette /> 跟随系统</SelectItem><SelectItem value="light"><Sun /> 浅色</SelectItem><SelectItem value="dark"><Moon /> 深色</SelectItem></SelectContent></Select>
-            </div>
-            <div className="background-control">
-              <div className="setting-copy"><span className="mini-icon"><ImageIcon size={16} /></span><div><label htmlFor="background-url">背景图片</label><p>填写网络图片地址，或把图片放到 public 后填写 /background.jpg。</p></div></div>
-              <input id="background-url" value={draftBackground} onChange={(e) => setDraftBackground(e.target.value)} placeholder="https://… 或 /background.jpg" inputMode="url" />
-              <div className="background-actions"><Button variant="outline" onClick={() => { setDraftBackground(""); setBackground(""); localStorage.removeItem("suieikat-background"); }}>恢复默认</Button><Button onClick={saveBackground}>应用背景</Button></div>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
     </main>
   );
 }

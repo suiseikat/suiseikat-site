@@ -16,6 +16,7 @@
 
 # next.js
 /.next/
+/.next-stale-*/
 /.vinext/
 /out/
 
@@ -37,11 +38,25 @@ yarn-error.log*
 
 # typescript
 next-env.d.ts
+*.tsbuildinfo
 /dist/
+/.deploy/
+/.migration-backups/
 /.wrangler/
+/data/messages.json
 # Checkout-local execution profile and tool state; never publish them.
 /.sites-runtime/
 /.agents/
 /.codex/
 /outputs/
 /work/
+/.tmp/
+/data/*.sqlite*
+/data/uploads/
+
+# Local deployment helpers, private screenshots, coursework and source backups.
+/artifacts/
+/comp1110/
+/Connect-FnServer.ps1
+/suieikat-site-source.tar.gz
+/Codex 图像 2026年9月16日 16_03_58.jpg

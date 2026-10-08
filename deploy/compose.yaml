@@ -1,0 +1,42 @@
+services:
+  site:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: suieikat-site
+    restart: unless-stopped
+    environment:
+      MESSAGE_DATA_FILE: /app/data/messages.json
+      SITE_DATA_FILE: /app/data/site.sqlite
+      UPLOAD_DATA_DIR: /app/data/uploads
+      SITE_ADMIN_EMAIL: ${SITE_ADMIN_EMAIL:-}
+      SITE_ADMIN_USERNAME: ${SITE_ADMIN_USERNAME:-}
+      SITE_ADMIN_PASSWORD: ${SITE_ADMIN_PASSWORD:-}
+      NETEASE_API_URL: http://netease-api:3000
+      FN_MEDIA_ORIGIN: ${FN_MEDIA_ORIGIN:-}
+      FN_MEDIA_ADMIN_USERNAME: ${FN_MEDIA_ADMIN_USERNAME:-}
+      FN_MEDIA_ADMIN_PASSWORD: ${FN_MEDIA_ADMIN_PASSWORD:-}
+      FN_MEDIA_CREDENTIAL_KEY: ${FN_MEDIA_CREDENTIAL_KEY:-}
+    ports:
+      - "127.0.0.1:3100:3000"
+    volumes:
+      - suieikat-message-data:/app/data
+    depends_on:
+      - netease-api
+
+  netease-api:
+    image: moefurina/ncm-api:latest
+    container_name: suieikat-netease-api
+    restart: unless-stopped
+    environment:
+      http_proxy: ""
+      https_proxy: ""
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      NO_PROXY: "*"
+      ENABLE_GENERAL_UNBLOCK: "true"
+    expose:
+      - "3000"
+
+volumes:
+  suieikat-message-data:

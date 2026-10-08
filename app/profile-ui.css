@@ -1,0 +1,41 @@
+/* Keep a single clear backdrop: each card owns its material, not its grid. */
+body.nebula-redesign .profile-page { padding:112px var(--page-gutter) 64px; min-height:100dvh; }
+body.nebula-redesign .profile-page .profile-background-clear { position:fixed;inset:0;height:100dvh; }
+body.nebula-redesign .profile-page .profile-background-clear img { height:100%;object-fit:cover; }
+body.nebula-redesign .profile-page .profile-background-blur { display:none; }
+body.nebula-redesign .profile-page .profile-background-shade { position:fixed;inset:0;background:linear-gradient(var(--image-wash),var(--image-wash)); }
+body.nebula-redesign .profile-page > :is(.profile-hero,.profile-grid,.achievement-section) { max-width:1120px;background:none!important;border:0;backdrop-filter:none!important; }
+body.nebula-redesign .profile-page > .profile-hero { min-height:280px;padding:28px 0;gap:32px;align-items:center; }
+body.nebula-redesign .profile-page .profile-hero h1 { font-size:clamp(40px,6vw,76px);margin:16px 0;letter-spacing:-.045em;overflow-wrap:anywhere; }
+body.nebula-redesign .profile-page .profile-orbit { width:160px;flex-shrink:0;animation:none; }
+body.nebula-redesign .profile-page .profile-hero > div:last-child { min-width:0; }
+body.nebula-redesign .profile-page .profile-bio { max-width:580px;line-height:1.8; }
+body.nebula-redesign .profile-page .profile-username,
+body.nebula-redesign .profile-page .profile-bio { color:var(--foreground);opacity:.9;text-shadow:0 1px 8px #0005; }
+body.nebula-redesign .profile-page > .profile-grid { margin-top:24px;grid-template-columns:1.6fr 1fr 1fr;gap:16px; }
+body.nebula-redesign .profile-page .profile-grid > article { min-height:190px!important;padding:24px!important; }
+body.nebula-redesign .profile-page .profile-xp-card > strong { font-size:48px;margin:20px 0; }
+body.nebula-redesign .profile-page .profile-stat strong { font-size:44px; }
+body.nebula-redesign .profile-page > .achievement-section { margin-top:40px;padding:0; }
+body.nebula-redesign .profile-page .achievement-section header { padding-bottom:20px;margin-bottom:18px;border-bottom:1px solid var(--border); }
+body.nebula-redesign .profile-page .achievement-section h2 { font-size:30px;margin-top:12px; }
+body.nebula-redesign .profile-page .achievement-grid { grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+body.nebula-redesign .profile-page .achievement-grid article { padding:24px;min-width:0;align-items:flex-start;min-height:150px; }
+body.nebula-redesign .profile-page .achievement-grid article strong { font-size:18px; }
+body.nebula-redesign .profile-page .achievement-grid article p { line-height:1.7; }
+body.nebula-redesign .profile-page .achievement-grid article time { display:block;margin-top:16px; }
+body.nebula-redesign .profile-page .profile-settings-button { position:fixed!important;top:24px;left:var(--page-gutter);right:auto;width:auto;height:44px;padding:0 16px;display:flex;gap:8px;align-items:center;border-radius:var(--frame-radius);background:var(--surface-fill);backdrop-filter:var(--surface-filter);border:1px solid var(--surface-line); }
+body.nebula-redesign .profile-settings-button svg { width:18px;height:18px; }
+body.nebula-redesign .profile-settings-button span { font-size:12px; }
+html[data-glass="liquid"] body.nebula-redesign .profile-settings-button { background:var(--optical-fill);backdrop-filter:var(--optical-filter);box-shadow:var(--optical-shadow); }
+html[data-glass="frosted"] body.nebula-redesign .profile-page :is(.profile-grid > article,.achievement-grid article) { border-radius:0!important;backdrop-filter:blur(16px)!important; }
+@media(max-width:720px) {
+ body.nebula-redesign .profile-page { padding-top:90px!important; }
+ body.nebula-redesign .profile-page > .profile-hero { flex-direction:row;justify-content:flex-start;min-height:240px!important;gap:18px!important; }
+ body.nebula-redesign .profile-page .profile-orbit { width:88px!important; }
+ body.nebula-redesign .profile-page .profile-hero h1 { font-size:clamp(28px,8vw,44px)!important; }
+ body.nebula-redesign .profile-page > .profile-grid { grid-template-columns:1fr 1fr!important;gap:12px; }
+ body.nebula-redesign .profile-page .profile-grid > article { min-height:150px!important;padding:20px!important; }
+ body.nebula-redesign .profile-page .achievement-grid { grid-template-columns:1fr;gap:12px; }
+ body.nebula-redesign .profile-page .profile-settings-button { top:18px; }
+}

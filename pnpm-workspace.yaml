@@ -1,0 +1,7 @@
+allowBuilds:
+  core-js: true
+  es5-ext: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true

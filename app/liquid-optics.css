@@ -1,0 +1,89 @@
+/* Apply optics to the element's backdrop, never a layer above its children.
+   Material rules deliberately do not change positioning, stacking or overflow. */
+html[data-glass="liquid"] {
+  --optical-filter: blur(6px) saturate(1.2);
+  --optical-fill: rgba(246,249,253,.48);
+  --optical-line: rgba(255,255,255,.68);
+  --optical-shadow: inset 0 1px 1px #ffffffb0,inset 0 -1px 1px #ffffff35,0 12px 36px #1424371c;
+}
+html[data-glass="liquid"][data-theme="dark"] {
+  --optical-fill: rgba(20,27,37,.48);
+  --optical-line: rgba(226,239,255,.3);
+  --optical-shadow: inset 0 1px 1px #ffffff50,inset 0 -1px 1px #ffffff16,0 12px 36px #0003;
+}
+html[data-glass="liquid"][data-refraction="svg"] { --optical-filter:url(#orbit-refraction) blur(3px) saturate(1.2); }
+html[data-glass="liquid"] body.nebula-redesign :is(.auth-card,.message-form,.message-login-gate,.message-item,.profile-grid>article,.achievement-grid article,.ranking-row,.admin-user,.admin-novel,.admin-section-link,.admin-music,.admin-novels,.book-dialog,.settings-sheet,.novel-upload,.profile-editor,.profile-editor-dialog,.lab-content,.lab-primary-menu,.directory-card,.course-card,.pdf-empty,.pdf-toolbar,.pdf-image-card,.toolbox-preview,.toolbox-controls,.test-metric,.test-analysis,.test-action-panel,.runner-aside,.game-2048,.music-manifesto),
+html[data-glass="liquid"] body.nebula-redesign .novel-library .catalog-window {
+  border:1px solid var(--optical-line)!important;
+  border-radius:var(--frame-radius)!important;
+  background:var(--optical-fill)!important;
+  backdrop-filter:var(--optical-filter)!important;
+  box-shadow:var(--optical-shadow)!important;
+  background-clip:padding-box;
+}
+/* Legacy decorative pseudo-elements must not blur the catalog's foreground. */
+html[data-glass="liquid"] body.nebula-redesign .catalog-window::before,
+html[data-glass="liquid"] body.nebula-redesign .catalog-window::after { content:none!important; }
+html[data-glass] body.nebula-redesign .settings-sheet {
+  position:fixed!important;inset:0 0 0 auto!important;
+  height:100dvh;overflow-x:hidden;overflow-y:auto;
+}
+html[data-glass="liquid"] body.nebula-redesign .settings-sheet.settings-sheet {
+  background:color-mix(in srgb,var(--panel) 76%,transparent)!important;
+  border-radius:var(--frame-radius) 0 0 var(--frame-radius)!important;
+}
+html[data-glass="liquid"] body.nebula-redesign .book-dialog.book-dialog {
+  background:color-mix(in srgb,var(--panel) 84%,transparent)!important;
+  color:var(--foreground)!important;
+}
+/* A portal select must sit above the sheet and its overlay. */
+body.nebula-redesign .orbit-glide-menu { z-index:160!important;pointer-events:auto; }
+body.nebula-redesign .orbit-glide-pill { pointer-events:none; }
+
+/* Keep the illustration fixed and equally visible on the home and lab pages. */
+body.nebula-redesign .site-shell>.fixed-site-background,
+body.nebula-redesign .lab-shell>.fixed-site-background {
+  position:fixed;inset:0;height:100dvh;z-index:-1;
+  opacity:1;filter:none;mask-image:none;transform:none;
+  background-image:linear-gradient(var(--image-wash),var(--image-wash)),url('/site-background-v2.webp');
+  background-position:center;background-size:cover;
+}
+body.nebula-redesign .site-shell,
+body.nebula-redesign .lab-shell { isolation:isolate;background:transparent; }
+/* Wrap the five real navigation choices; do not hide overflow with a scrollbar. */
+@media(max-width:900px) {
+  body.nebula-redesign .lab-primary-menu.lab-index {
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    position:static!important;gap:6px;padding:10px!important;overflow:visible!important;
+  }
+  body.nebula-redesign .lab-primary-menu.lab-index>span,
+  body.nebula-redesign .lab-primary-menu.lab-index>p { display:none; }
+  body.nebula-redesign .lab-primary-menu.lab-index button {
+    width:100%;min-width:0;min-height:46px;white-space:normal;
+    justify-content:center;gap:4px;padding:10px 6px!important;font-size:12px!important;
+  }
+  body.nebula-redesign .lab-primary-menu.lab-index button:hover { translate:none; }
+}
+@media(max-width:480px) {
+  body.nebula-redesign .lab-primary-menu.lab-index { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  body.nebula-redesign .lab-primary-menu.lab-index button:last-of-type { grid-column:1/-1; }
+  html[data-glass="liquid"] body.nebula-redesign .settings-sheet.settings-sheet { border-radius:0!important; }
+}
+
+/* Pointer-driven edge light adapted from the supplied BorderGlow interaction. */
+html[data-glass="liquid"] body.nebula-redesign .music-information { background:rgba(8,13,22,.58); }
+html[data-glass="liquid"] body.nebula-redesign .music-cover-stage { background:linear-gradient(135deg,#ffffff30,#ffffff08);color:var(--foreground); }
+body.nebula-redesign .editorial-menu .menu-portrait.menu-mascot { background:transparent; }
+@media(min-width:721px) {
+ body.nebula-redesign .novel-library .novel-hero .novel-title-card { left:max(5vw,calc(50% - 450px))!important;top:50%!important;width:340px!important; }
+ body.nebula-redesign .novel-library .novel-hero .novel-title-card h1 { font-size:clamp(48px,5vw,64px)!important;line-height:.95; }
+ body.nebula-redesign .novel-library .novel-hero .novel-title-card h1 span { white-space:nowrap; }
+ body.nebula-redesign .novel-library .novel-hero .novel-hero-character { right:max(1vw,calc(50% - 470px))!important;height:92%!important; }
+}
+html[data-glass="liquid"] .border-glow-action{--glow-angle:45deg;--glow-strength:0;position:relative;isolation:isolate;overflow:visible;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s cubic-bezier(.22,1,.36,1)}
+html[data-glass="liquid"] .border-glow-action::before{content:"";position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;z-index:-1;background:conic-gradient(from var(--glow-angle),transparent 0deg,#8ccfff 32deg,#f4a4ca 52deg,#fff 72deg,transparent 108deg 360deg);opacity:calc(.18 + var(--glow-strength) * .75);filter:blur(3px);transition:opacity .3s ease}
+html[data-glass="liquid"] .border-glow-action::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;padding:1.5px;background:conic-gradient(from var(--glow-angle),transparent 0deg,#8ccfff 32deg,#f4a4ca 52deg,#fff 72deg,transparent 108deg 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:calc(.24 + var(--glow-strength) * .76);transition:opacity .3s ease}
+html[data-glass="liquid"] .border-glow-action:hover{transform:translateY(-2px);box-shadow:0 10px 28px #0002,0 0 24px #a9d6ff30}
+html[data-glass="liquid"] .border-glow-action:focus-visible{outline:2px solid #91d6f3;outline-offset:4px}
+html[data-glass="frosted"] .border-glow-action::before,html[data-glass="frosted"] .border-glow-action::after{display:none}
+@media(prefers-reduced-motion:reduce){html[data-glass="liquid"] .border-glow-action{transition:none}html[data-glass="liquid"] .border-glow-action:hover{transform:none}}
