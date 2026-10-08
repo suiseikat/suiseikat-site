@@ -5,6 +5,7 @@ import { ArrowDown, ArrowRight, BookOpen, Search, Sparkles, X } from "lucide-rea
 import { NovelReader } from "@/components/novel-reader";
 import { AccordionGallery, GlideSelect } from "@/components/orbit-micro-ui";
 import { leaveBorderGlow, moveBorderGlow } from "@/components/border-glow";
+import { novelDownloadName } from "@/lib/novel-download";
 
 const PLACEHOLDER = "/novel-cover-placeholder.webp";
 
@@ -46,7 +47,7 @@ function Cover({ novel, className = "" }: { novel: Novel | null; className?: str
 
 function BookDialog({ novel, close, onRead }: { novel: Novel; close: () => void; onRead: () => void }) {
   return <div className="book-dialog-backdrop" role="dialog" aria-modal="true" aria-label={`${novel.title} 详情`} onMouseDown={(event) => event.target === event.currentTarget && close()}>
-    <article className="book-dialog"><button className="book-dialog-close" onClick={close} aria-label="关闭"><X /></button><div className="book-dialog-cover-wrap"><Cover novel={novel} className="book-dialog-cover" /></div><div className="book-dialog-copy"><small>{novel.format.toUpperCase()} / LIBRARY</small><p className="book-dialog-kana">{novel.kana || novel.genre || "轻小说"}</p><h2>{novel.title}</h2><div className="book-dialog-meta"><span>{novel.author || "佚名"}</span><span>{novel.genre || "轻小说"}</span><span>{novel.featured ? "推荐中" : "已入库"}</span></div><div className="book-dialog-desc"><p>{novel.description || "这本书还没有简介。"}</p></div><div className="book-dialog-actions"><button className="start-reading border-glow-action" onPointerMove={moveBorderGlow} onPointerLeave={leaveBorderGlow} onClick={onRead}><BookOpen /> 在线阅读</button><a className="download-book" href={novel.fileUrl} download><ArrowRight /> 下载文件</a></div></div></article>
+    <article className="book-dialog"><button className="book-dialog-close" onClick={close} aria-label="关闭"><X /></button><div className="book-dialog-cover-wrap"><Cover novel={novel} className="book-dialog-cover" /></div><div className="book-dialog-copy"><small>{novel.format.toUpperCase()} / LIBRARY</small><p className="book-dialog-kana">{novel.kana || novel.genre || "轻小说"}</p><h2>{novel.title}</h2><div className="book-dialog-meta"><span>{novel.author || "佚名"}</span><span>{novel.genre || "轻小说"}</span><span>{novel.featured ? "推荐中" : "已入库"}</span></div><div className="book-dialog-desc"><p>{novel.description || "这本书还没有简介。"}</p></div><div className="book-dialog-actions"><button className="start-reading border-glow-action" onPointerMove={moveBorderGlow} onPointerLeave={leaveBorderGlow} onClick={onRead}><BookOpen /> 在线阅读</button><a className="download-book" href={novel.fileUrl} download={novelDownloadName(novel.title, novel.format)}><ArrowRight /> 下载文件</a></div></div></article>
   </div>;
 }
 

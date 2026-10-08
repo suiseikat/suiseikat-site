@@ -60,18 +60,33 @@ export async function inspectPlaylist(playlistId: string) {
   return { name: result.playlist.name || "网易云歌单", count: result.playlist.trackIds?.length ?? result.playlist.tracks?.length ?? 0 };
 }
 function hkDate() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Hong_Kong", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
+
+function publicAudioUrl(songId: number) { return `https://music.163.com/song/media/outer/url?id=${songId}.mp3`; }
+
+// Resolve authenticated/expiring playback URLs only when playback is requested.
+// Slow audio upstreams must not delay the initial title and album artwork.
+export async function getMusicAudioUrl(songId: number) {
+  const cookie = getNeteaseCookie();
+  try {
+    let audio = await api<{ data?: Array<{ url?: string | null }> }>(`/song/url/v1?id=${songId}&level=lossless`, cookie);
+    if (!audio.data?.[0]?.url) audio = await api<{ data?: Array<{ url?: string | null }> }>(`/song/url?id=${songId}&br=320000`, cookie);
+    if (audio.data?.[0]?.url) return audio.data[0].url.replace(/^http:/, "https:");
+  } catch { /* public fallback */ }
+  return publicAudioUrl(songId);
+}
+
 export async function getDailyMusic(force = false): Promise<DailyMusic | null> {
   const playlistId = getSiteSetting("netease_playlist_id"); if (!playlistId) return null;
   const date = hkDate(); const cached = getSiteSetting("netease_daily_track");
-  if (!force && cached) { try { const parsed = JSON.parse(cached) as DailyMusic; if (parsed.date === date && parsed.playlistId === playlistId) return parsed; } catch { /* refresh */ } }
+  if (!force && cached) { try { const parsed = JSON.parse(cached) as DailyMusic; if (parsed.date === date && parsed.playlistId === playlistId && parsed.coverUrl) return parsed; } catch { /* refresh */ } }
   const cookie = getNeteaseCookie(); const result = await api<PlaylistResponse>(`/playlist/detail?id=${encodeURIComponent(playlistId)}&s=0`, cookie);
   const playlist = result.playlist; const ids = playlist?.trackIds?.map((track) => track.id) ?? playlist?.tracks?.map((track) => track.id) ?? [];
   if (!playlist || !ids.length) throw new Error("歌单没有可展示的歌曲。");
   const digest = force ? randomBytes(4) : createHash("sha256").update(`${playlistId}:${date}`).digest(); const selectedId = ids[digest.readUInt32BE(0) % ids.length];
-  let song = playlist.tracks?.find((track) => track.id === selectedId); if (!song) song = (await api<{ songs?: ApiSong[] }>(`/song/detail?ids=${selectedId}`, cookie)).songs?.[0];
+  let song = playlist.tracks?.find((track) => track.id === selectedId);
+  if (!song || !(song.al ?? song.album)?.picUrl) song = (await api<{ songs?: ApiSong[] }>(`/song/detail?ids=${selectedId}`, cookie)).songs?.[0] ?? song;
   if (!song) throw new Error("无法取得歌曲资料。");
-  let audioUrl = `https://music.163.com/song/media/outer/url?id=${selectedId}.mp3`;
-  try { let audio = await api<{ data?: Array<{ url?: string | null }> }>(`/song/url/v1?id=${selectedId}&level=lossless`, cookie); if (!audio.data?.[0]?.url) audio = await api<{ data?: Array<{ url?: string | null }> }>(`/song/url?id=${selectedId}&br=320000`, cookie); if (audio.data?.[0]?.url) audioUrl = audio.data[0].url.replace(/^http:/, "https:"); } catch { /* public fallback */ }
+  const audioUrl = publicAudioUrl(selectedId);
   const artists = song.ar ?? song.artists ?? []; const album = song.al ?? song.album ?? {};
   const daily: DailyMusic = { date, playlistId, playlistName: playlist.name || "网易云歌单", id: song.id, name: song.name, artists: artists.map((artist) => artist.name).join(" / ") || "Unknown Artist", album: album.name || "Unknown Album", coverUrl: (album.picUrl || "").replace(/^http:/, "https:"), durationMs: song.dt ?? 0, songUrl: `https://music.163.com/#/song?id=${song.id}`, audioUrl };
   setSiteSetting("netease_daily_track", JSON.stringify(daily)); return daily;

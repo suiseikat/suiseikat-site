@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { randomBytes, scryptSync } from "node:crypto";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { ACHIEVEMENTS, levelFromXp, type Achievement, type GuestbookMessage, type PublicProfile, type PublicUser, type ReactionCounts, type ReactionType, type UserRole, type UserTier, type Viewer } from "@/lib/community-types";
+import { ACHIEVEMENTS, DAILY_CHECKIN_XP, levelFromXp, type Achievement, type GuestbookMessage, type PublicProfile, type PublicUser, type ReactionCounts, type ReactionType, type UserRole, type UserTier, type Viewer } from "@/lib/community-types";
 
 const databaseFile = process.env.SITE_DATA_FILE ?? path.join(process.cwd(), "data", "site.sqlite");
 export const uploadDirectory = process.env.UPLOAD_DATA_DIR ?? path.join(path.dirname(databaseFile), "uploads");
@@ -127,6 +127,11 @@ function initializeDatabase() {
   const messageColumns = database.prepare("PRAGMA table_info(messages)").all() as Array<{ name: string }>;
   if (!messageColumns.some((column) => column.name === "ip_city")) database.exec("ALTER TABLE messages ADD COLUMN ip_city TEXT");
   migrateReactionTypes(database);
+  // Older releases recorded daily check-ins without awarding their daily XP.
+  // Retain the original dates and unique event keys so restarts cannot pay twice.
+  database.prepare(`INSERT OR IGNORE INTO xp_events(id,user_id,event_key,kind,amount,created_at)
+    SELECT lower(hex(randomblob(16))),user_id,'checkin:' || day,'daily_checkin',?,created_at FROM checkins`)
+    .run(DAILY_CHECKIN_XP);
   bootstrapAdmin(database);
   migrateLegacyMessages(database);
   return database;
@@ -365,10 +370,21 @@ export function toggleReaction(messageId: string, actorKey: string, type: Reacti
 
 export function checkIn(userId: string) {
   const day = hkDay();
-  const inserted = db().prepare("INSERT OR IGNORE INTO checkins(user_id,day,created_at) VALUES(?,?,?)").run(userId, day, new Date().toISOString());
-  const streak = consecutiveStreak(userId);
-  if (Number(inserted.changes) && streak > 0 && streak % 7 === 0) awardXp(userId, `checkin7:${day}`, "seven_day_streak", 50, "seven_day_streak");
-  return { checkedIn: Number(inserted.changes) > 0, streak, viewer: viewerDetails(userId)! };
+  const database = db();
+  database.exec("BEGIN IMMEDIATE");
+  try {
+    const previousXp = xpForUser(userId);
+    const inserted = database.prepare("INSERT OR IGNORE INTO checkins(user_id,day,created_at) VALUES(?,?,?)").run(userId, day, new Date().toISOString());
+    awardXp(userId, `checkin:${day}`, "daily_checkin", DAILY_CHECKIN_XP);
+    const streak = consecutiveStreak(userId);
+    if (Number(inserted.changes) && streak > 0 && streak % 7 === 0) awardXp(userId, `checkin7:${day}`, "seven_day_streak", 50, "seven_day_streak");
+    const viewer = viewerDetails(userId)!;
+    database.exec("COMMIT");
+    return { checkedIn: Number(inserted.changes) > 0, streak, xpGained: viewer.xp - previousXp, viewer };
+  } catch (error) {
+    database.exec("ROLLBACK");
+    throw error;
+  }
 }
 
 export function updateAvatar(userId: string, avatarName: string) {
@@ -509,6 +525,11 @@ export function listFeaturedNovels(): Novel[] {
 
 export function getNovelRow(id: string): NovelRow | null {
   const row = db().prepare("SELECT * FROM novels WHERE id=? AND deleted_at IS NULL").get(id) as NovelRow | undefined;
+  return row ?? null;
+}
+
+export function getNovelByFileName(fileName: string): NovelRow | null {
+  const row = db().prepare("SELECT * FROM novels WHERE file_name=? AND deleted_at IS NULL LIMIT 1").get(fileName) as NovelRow | undefined;
   return row ?? null;
 }
 

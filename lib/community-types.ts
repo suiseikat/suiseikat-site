@@ -56,6 +56,7 @@ export type PublicProfile = PublicUser & {
 };
 
 export const LEVEL_THRESHOLDS = [0, 25, 60, 110, 180, 270, 380, 510, 660, 850] as const;
+export const DAILY_CHECKIN_XP = 5;
 
 export function levelFromXp(xp: number) {
   let level = 1;

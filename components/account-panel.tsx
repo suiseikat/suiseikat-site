@@ -24,13 +24,16 @@ export function AccountPanel({ onNavigate }: { onNavigate?: () => void } = {}) {
     setBusy(true);
     try {
     const response = await fetch("/api/checkin", { method: "POST" });
-    const data = await response.json() as { viewer?: Viewer; error?: string; checkedIn?: boolean };
+    const data = await response.json() as { viewer?: Viewer; error?: string; checkedIn?: boolean; xpGained?: number };
     if (response.ok && data.viewer) {
-      const gained = data.viewer.xp - (viewer?.xp ?? data.viewer.xp);
+      const gained = data.xpGained ?? data.viewer.xp - (viewer?.xp ?? data.viewer.xp);
       setViewer(data.viewer);
-      setXpBurst({ key: Date.now(), text: gained > 0 ? `+${gained} XP` : "STREAK +1" });
-      window.setTimeout(() => setXpBurst(null), 1800);
-      setStatus(data.checkedIn ? "今日轨迹已记录。" : "今天已经签到过了。");
+      if (gained > 0) {
+        setXpBurst({ key: Date.now(), text: `+${gained} XP` });
+        window.setTimeout(() => setXpBurst(null), 1800);
+      }
+      setStatus(data.checkedIn ? `签到成功，获得 ${gained} XP。` : "今天已经签到过了。");
+      window.dispatchEvent(new Event("comet:auth-change"));
     } else setStatus(data.error ?? "签到失败。");
     } catch { setStatus("签到失败，请检查网络后重试。"); }
     finally { setBusy(false); }

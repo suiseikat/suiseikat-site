@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { novelDownloadName } from "@/lib/novel-download";
 import {
   ArrowLeft, Bookmark, BookmarkPlus, ChevronLeft, ChevronRight, Download, List,
   Loader2, RotateCcw, Settings2, Trash2, X,
@@ -128,8 +129,8 @@ function EpubNovelReader({ novelId, title, fileUrl, onClose }: Props) {
         if (!response.ok) throw new Error("无法读取 EPUB 文件。");
         const buffer = await response.arrayBuffer();
         if (disposed) return;
-        const module = await import("epubjs");
-        const createBook = module.default;
+        const epubModule = await import("epubjs");
+        const createBook = epubModule.default;
         book = createBook(buffer, { replacements: "blobUrl" });
         bookRef.current = book;
         await book.opened;
@@ -273,7 +274,7 @@ function EpubNovelReader({ novelId, title, fileUrl, onClose }: Props) {
       <div className="toolbar-actions">
         <button className="reader-icon" onClick={() => setPanel(panel === "settings" ? null : "settings")} aria-label="阅读设置"><Settings2 /></button>
         <button className="reader-icon" onClick={() => setPanel(panel === "chapters" ? null : "chapters")} aria-label="章节目录"><List /></button>
-        <a className="reader-icon" href={fileUrl} download aria-label="下载原文件"><Download /></a>
+        <a className="reader-icon" href={fileUrl} download={novelDownloadName(title, fileUrl.split("/").at(-1) ?? "epub")} aria-label="下载原文件"><Download /></a>
       </div>
     </div>
 
@@ -541,7 +542,7 @@ function LegacyNovelReader({ novelId, title, fileUrl, onClose }: Props) {
         <button className="reader-icon" onClick={() => setPanel(panel === "bookmarks" ? null : "bookmarks")} aria-label="书签"><Bookmark /></button>
         <button className="reader-icon" onClick={() => setPanel(panel === "settings" ? null : "settings")} aria-label="阅读设置"><Settings2 /></button>
         <button className="reader-icon" onClick={() => setPanel(panel === "chapters" ? null : "chapters")} aria-label="章节目录" disabled={!total}><List /></button>
-        <a className="reader-icon" href={fileUrl} download aria-label="下载原文件"><Download /></a>
+        <a className="reader-icon" href={fileUrl} download={novelDownloadName(title, fileUrl.split("/").at(-1) ?? "epub")} aria-label="下载原文件"><Download /></a>
       </div>
     </div>
 
@@ -555,7 +556,7 @@ function LegacyNovelReader({ novelId, title, fileUrl, onClose }: Props) {
 
       {content && total === 0 && <div className="reader-note is-error">
         <p>{content.unsupported ?? "这个文件里没有可阅读的正文。"}</p>
-        <a className="reader-download" href={fileUrl} download><Download size={15} /> 下载原文件阅读</a>
+        <a className="reader-download" href={fileUrl} download={novelDownloadName(title, fileUrl.split("/").at(-1) ?? "epub")}><Download size={15} /> 下载原文件阅读</a>
       </div>}
 
       {total > 0 && settings.pageMode === "scroll" && <div className="apple-page-viewport" ref={pageViewport}

@@ -10,9 +10,17 @@ import { LEVEL_THRESHOLDS, nextLevelXp, type PublicProfile, type Viewer } from "
 export default function ProfilePage() {
   const params = useParams<{ username: string }>(); const [profile, setProfile] = useState<PublicProfile | null | undefined>(); const [viewer, setViewer] = useState<Viewer | null>(null); const [avatarStatus, setAvatarStatus] = useFeedback("");
   const loadProfile = useCallback(async () => { const response = await fetch(`/api/users/${encodeURIComponent(params.username)}`, { cache: "no-store" }); setProfile(response.ok ? (await response.json() as { profile: PublicProfile }).profile : null); }, [params.username]);
-  // Initial network hydration is intentionally performed once per profile route.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { void loadProfile(); fetch("/api/auth/me", { cache: "no-store" }).then((r) => r.json() as Promise<{ user: Viewer | null }>).then((data) => setViewer(data.user)); }, [loadProfile]);
+  // Check-in and login changes must refresh the profile behind the account sheet.
+  useEffect(() => {
+    let active = true;
+    const refresh = () => {
+      void loadProfile().catch(() => undefined);
+      void fetch("/api/auth/me", { cache: "no-store" }).then((r) => r.json() as Promise<{ user: Viewer | null }>).then((data) => { if (active) setViewer(data.user); }).catch(() => undefined);
+    };
+    refresh();
+    window.addEventListener("comet:auth-change", refresh);
+    return () => { active = false; window.removeEventListener("comet:auth-change", refresh); };
+  }, [loadProfile]);
   const uploadAvatar = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; event.target.value = ""; if (!file) return;
     const form = new FormData(); form.set("avatar", file); setAvatarStatus("处理中…");
